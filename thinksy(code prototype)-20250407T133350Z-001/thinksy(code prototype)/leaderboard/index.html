@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thinksy - Leaderboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background-color: #0c0c1d;
+      color: #ffffff;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 35px;
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .user-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #1e1e42;
+      border: 2px solid #7b68ee;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-name {
+      font-weight: 500;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .profile-card {
+      background-color: #141432;
+      border-radius: 15px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .username {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .user-id {
+      color: #777;
+      margin-bottom: 20px;
+    }
+
+    .stats {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .label {
+      color: #aaa;
+    }
+
+    .value {
+      font-weight: 500;
+    }
+
+    .streak-card {
+      background-color: #1e1e42;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .streak-info h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .streak-info p {
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .skill-fusion {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .section-title {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #ddd;
+    }
+
+    .fusion-history {
+      background-color: #1e1e42;
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .fusion-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .fusion-item:last-child {
+      border-bottom: none;
+    }
+
+    .fusion-rank {
+      width: 30px;
+      height: 30px;
+      background-color: #7b68ee;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    .fusion-name {
+      display: flex;
+      align-items: center;
+    }
+
+    .leaderboard-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .leaderboard-card {
+      background-color: #141432;
+      border-radius: 15px;
+      padding: 25px;
+    }
+
+    .leaderboard-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .leaderboard-table th {
+      text-align: left;
+      padding: 15px 10px;
+      color: #aaa;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .leaderboard-table td {
+      padding: 15px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .leaderboard-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .rank {
+      font-weight: 600;
+    }
+
+    .rank-1 {
+      color: gold;
+    }
+
+    .rank-2 {
+      color: silver;
+    }
+
+    .rank-3 {
+      color: #cd7f32; /* bronze */
+    }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-cell img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+
+    .badges-section {
+      background-color: #141432;
+      border-radius: 15px;
+      padding: 25px;
+    }
+
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .badge-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #1e1e42;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .badge-icon img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .badge-name {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .badge-description {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .xp {
+      font-weight: 600;
+      color: #7b68ee;
+    }
+
+    @media (max-width: 1024px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="thinksy_logo.png" alt="Thinksy Logo">
+        <h1>Thinksy</h1>
+      </div>
+      <div class="user-header">
+        <div class="user-avatar">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User Avatar">
+        </div>
+        <span class="user-name">creativisionary</span>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="profile-section">
+        <div class="profile-card">
+          <div class="profile-pic">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User Profile">
+          </div>
+          <h2 class="username">creativisionary</h2>
+          <p class="user-id">#1234</p>
+
+          <div class="stats">
+            <div class="stat-row">
+              <span class="label">XP</span>
+              <span class="value">18250 XP</span>
+            </div>
+            <div class="stat-row">
+              <span class="label">Level</span>
+              <span class="value">12</span>
+            </div>
+            <div class="stat-row">
+              <span class="label">Skills Mastered</span>
+              <span class="value">25</span>
+            </div>
+          </div>
+
+          <div class="streak-card">
+            <div class="streak-info">
+              <h3>
+                <span>🔥</span>
+                <span>5 Streak Days</span>
+              </h3>
+              <p>Longest Streak: 10 days</p>
+            </div>
+          </div>
+
+          <div class="skill-fusion">
+            <h3 class="section-title">Skill Fusion History</h3>
+            <div class="fusion-history">
+              <div class="fusion-item">
+                <div class="fusion-name">
+                  <div class="fusion-rank">1</div>
+                  <span>starcoder</span>
+                </div>
+                <span class="xp">21050 XP</span>
+              </div>
+              <div class="fusion-item">
+                <div class="fusion-name">
+                  <div class="fusion-rank">2</div>
+                  <span>techtitan</span>
+                </div>
+                <span class="xp">19500 XP</span>
+              </div>
+              <div class="fusion-item">
+                <div class="fusion-name">
+                  <div class="fusion-rank">3</div>
+                  <span>innovatica</span>
+                </div>
+                <span class="xp">17200 XP</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="leaderboard-section">
+        <div class="leaderboard-card">
+          <h2 class="leaderboard-title">Leaderboard</h2>
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>XP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="rank rank-1">1</td>
+                <td class="user-cell">
+                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="User">
+                  <span>starcoder</span>
+                </td>
+                <td class="xp">21000 XP</td>
+              </tr>
+              <tr>
+                <td class="rank rank-2">2</td>
+                <td class="user-cell">
+                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jane" alt="User">
+                  <span>techtitan</span>
+                </td>
+                <td class="xp">19500 XP</td>
+              </tr>
+              <tr>
+                <td class="rank rank-3">3</td>
+                <td class="user-cell">
+                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" alt="User">
+                  <span>innovatica</span>
+                </td>
+                <td class="xp">17200 XP</td>
+              </tr>
+              <tr>
+                <td class="rank">4</td>
+                <td class="user-cell">
+                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sam" alt="User">
+                  <span>devplugin</span>
+                </td>
+                <td class="xp">16800 XP</td>
+              </tr>
+              <tr>
+                <td class="rank">5</td>
+                <td class="user-cell">
+                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Taylor" alt="User">
+                  <span>codeartist</span>
+                </td>
+                <td class="xp">15450 XP</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="badges-section">
+          <h2 class="leaderboard-title">Badges</h2>
+          <div class="badges-grid">
+            <div class="badge">
+              <div class="badge-icon" style="background-color: rgba(255, 165, 0, 0.2);">
+                <span style="color: orange; font-size: 24px;">⚡</span>
+              </div>
+              <h4 class="badge-name">Skill Weaver</h4>
+              <p class="badge-description">Combined 5+ skills</p>
+            </div>
+            <div class="badge">
+              <div class="badge-icon" style="background-color: rgba(255, 69, 0, 0.2);">
+                <span style="color: orangered; font-size: 24px;">🔥</span>
+              </div>
+              <h4 class="badge-name">Unstoppable Streak</h4>
+              <p class="badge-description">7 days straight</p>
+            </div>
+            <div class="badge">
+              <div class="badge-icon" style="background-color: rgba(65, 105, 225, 0.2);">
+                <span style="color: royalblue; font-size: 24px;">🏆</span>
+              </div>
+              <h4 class="badge-name">Challenge Master</h4>
+              <p class="badge-description">Completed 10 challenges</p>
+            </div>
+            <div class="badge">
+              <div class="badge-icon" style="background-color: rgba(60, 179, 113, 0.2);">
+                <span style="color: mediumseagreen; font-size: 24px;">👥</span>
+              </div>
+              <h4 class="badge-name">Collaboration Guru</h4>
+              <p class="badge-description">20+ collaborative sessions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // This script can be expanded to add any interactive functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Thinksy leaderboard loaded');
+    });
+  </script>
+</body>
+</html>

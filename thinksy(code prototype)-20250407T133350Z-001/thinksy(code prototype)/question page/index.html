@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thinksy - Coding Challenges</title>
+    <style>
+        :root {
+            --primary-dark: #0f0921;
+            --primary-bg: #1a1033; 
+            --accent-purple: #6e3bab;
+            --accent-gradient: linear-gradient(135deg, #9042c8, #4e56dd);
+            --text-light: #f0f0f5;
+            --text-muted: #a8a8b3;
+            --easy-color: #4caf50;
+            --medium-color: #ff9800;
+            --hard-color: #f44336;
+            --card-bg: #231a3f;
+            --hover-bg: #2f2452;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-light);
+        }
+
+        header {
+            background-color: var(--primary-dark);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50px;
+            transition: background 0.2s ease;
+        }
+
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .header-bottom {
+            margin-top: 1rem;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 0.75rem 1.25rem;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container input {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            width: 100%;
+            padding: 0.25rem;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .search-container input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-container i {
+            color: var(--text-light);
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .sort-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .challenges-header {
+            display: grid;
+            grid-template-columns: 50px 3fr 1fr 1fr;
+            padding: 0.75rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            letter-spacing: 0.05rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .challenges-container {
+            margin-top: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .challenge-item {
+            display: grid;
+            grid-template-columns: 50px 3fr 1fr 1fr;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        .challenge-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .challenge-number {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .challenge-title {
+            font-weight: 500;
+        }
+
+        .challenge-solution i {
+            margin-right: 0.5rem;
+            color: #4e56dd;
+        }
+
+        .difficulty {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+            text-align: center;
+            width: 80px;
+        }
+
+        .easy {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--easy-color);
+        }
+
+        .medium {
+            background: rgba(255, 152, 0, 0.15);
+            color: var(--medium-color);
+        }
+
+        .hard {
+            background: rgba(244, 67, 54, 0.15);
+            color: var(--hard-color);
+        }
+
+        .topic-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .topic-pill {
+            background: var(--card-bg);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .topic-pill span {
+            background: var(--accent-gradient);
+            color: white;
+            border-radius: 50px;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 60px;
+            right: 2rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 100;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .challenges-header, .challenge-item {
+                grid-template-columns: 40px 2fr 1fr;
+            }
+            
+            .challenge-solution {
+                display: none;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .header-top, .header-bottom {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <img src="thinksy_logo.png" alt="Thinksy Logo">
+
+                <h1>Thinksy</h1>
+            </div>
+            <div class="user-profile" id="userProfileBtn">
+                <img src="unknown_user copy.png" alt="User Avatar" class="user-avatar">
+                <span class="user-name">Alex Johnson</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search coding challenges, topics, or tags...">
+            </div>
+        </div>
+        <div class="dropdown-menu" id="userDropdown">
+            <div class="dropdown-item">
+                <i class="fas fa-user"></i>
+                <span>My Profile</span>
+            </div>
+            <div class="dropdown-item">
+                <i class="fas fa-code"></i>
+                <span>My Challenges</span>
+            </div>
+            <div class="dropdown-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Statistics</span>
+            </div>
+            <div class="dropdown-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+            <div class="dropdown-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sign Out</span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="filters">
+        <div class="filter-group">
+            <button class="filter-button">
+                <i class="fas fa-list"></i>
+                All Topics
+            </button>
+            <button class="filter-button">
+                <i class="fas fa-chart-bar"></i>
+                Difficulty
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <button class="filter-button">
+                <i class="fas fa-check-circle"></i>
+                Status
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <button class="filter-button">
+                <i class="fas fa-tag"></i>
+                Tags
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <button class="sort-button">
+            <i class="fas fa-sort"></i>
+            Sort
+        </button>
+    </div>
+    
+    <div class="container">
+        <h1 class="page-title">Coding Challenges</h1>
+        
+        <div class="challenges-container">
+            <div class="challenges-header">
+                <div>#</div>
+                <div>Title</div>
+                <div>Solution</div>
+                <div>Difficulty</div>
+            </div>
+            
+            <div class="challenge-item">
+                <div class="challenge-number">1</div>
+                <div class="challenge-title">Two Sum</div>
+                <div class="challenge-solution"><i class="fas fa-file-code"></i> 55.3%</div>
+                <div><span class="difficulty easy">Easy</span></div>
+            </div>
+            
+            <div class="challenge-item">
+                <div class="challenge-number">2</div>
+                <div class="challenge-title">Add Two Numbers</div>
+                <div class="challenge-solution"><i class="fas fa-file-code"></i> 45.7%</div>
+                <div><span class="difficulty medium">Medium</span></div>
+            </div>
+            
+            <div class="challenge-item">
+                <div class="challenge-number">3</div>
+                <div class="challenge-title">Longest Substring Without Repeating Characters</div>
+                <div class="challenge-solution"><i class="fas fa-file-code"></i> 36.5%</div>
+                <div><span class="difficulty medium">Medium</span></div>
+            </div>
+            
+            <div class="challenge-item">
+                <div class="challenge-number">4</div>
+                <div class="challenge-title">Median of Two Sorted Arrays</div>
+                <div class="challenge-solution"><i class="fas fa-file-code"></i> 43.2%</div>
+                <div><span class="difficulty hard">Hard</span></div>
+            </div>
+            
+            <div class="challenge-item">
+                <div class="challenge-number">5</div>
+                <div class="challenge-title">Longest Palindromic Substring</div>
+                <div class="challenge-solution"><i class="fas fa-file-code"></i> 35.5%</div>
+                <div><span class="difficulty medium">Medium</span></div>
+            </div>
+            
+            <div class="challenge-item">
+                <div class="challenge-number">6</div>
+                <div class="challenge-title">Zigzag Conversion</div>
+                <div class="challenge-solution"><i class="fas fa-file-code"></i> 51.0%</div>
+                <div><span class="difficulty medium">Medium</span></div>
+            </div>
+            
+            <div class="challenge-item">
+                <div class="challenge-number">7</div>
+                <div class="challenge-title">Reverse Integer</div>
+                <div class="challenge-solution"><i class="fas fa-file-code"></i> 30.0%</div>
+                <div><span class="difficulty medium">Medium</span></div>
+            </div>
+            
+            <div class="challenge-item">
+                <div class="challenge-number">8</div>
+                <div class="challenge-title">String to Integer (atoi)</div>
+                <div class="challenge-solution"><i class="fas fa-file-code"></i> 18.9%</div>
+                <div><span class="difficulty medium">Medium</span></div>
+            </div>
+        </div>
+        
+        <div class="topic-pills">
+            <div class="topic-pill">Microsoft <span>1129</span></div>
+            <div class="topic-pill">Bloomberg <span>523</span></div>
+            <div class="topic-pill">Goldman Sachs <span>238</span></div>
+            <div class="topic-pill">Oracle <span>309</span></div>
+            <div class="topic-pill">LinkedIn <span>165</span></div>
+            <div class="topic-pill">Adobe <span>637</span></div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle user dropdown menu
+        const userProfileBtn = document.getElementById('userProfileBtn');
+        const userDropdown = document.getElementById('userDropdown');
+        
+        userProfileBtn.addEventListener('click', () => {
+            userDropdown.classList.toggle('active');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userProfileBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                userDropdown.classList.remove('active');
+            }
+        });
+
+        // Add interaction to filter buttons
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Toggle active class for styling
+                button.classList.toggle('active');
+                // Here you would typically show a dropdown with filter options
+                console.log('Filter clicked:', button.textContent.trim());
+            });
+        });
+
+        // Add interaction to challenge items
+        const challengeItems = document.querySelectorAll('.challenge-item');
+        challengeItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const title = item.querySelector('.challenge-title').textContent;
+                console.log('Challenge selected:', title);
+                // Here you would typically navigate to the challenge detail page
+            });
+        });
+        
+        // Search functionality
+        const searchInput = document.querySelector('.search-container input');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const challenges = document.querySelectorAll('.challenge-item');
+            
+            challenges.forEach(challenge => {
+                const title = challenge.querySelector('.challenge-title').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    challenge.style.display = 'grid';
+                } else {
+                    challenge.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

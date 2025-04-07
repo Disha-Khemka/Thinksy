@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thinksy - Collaborative learning made easy</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <style>
+        /* Login/Signup Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 40px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 26px;
+            color: #1d4ed8;
+        }
+
+        .modal input[type="text"],
+        .modal input[type="password"],
+        .modal input[type="email"] {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 12px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .modal input:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+
+        .modal .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background-color: #3b82f6;
+            color: #fff;
+            font-size: 17px;
+            font-weight: bold;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .modal .btn-submit:hover {
+            background-color: #2563eb;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        /* Status message styling */
+        .status-message {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #4b5563;
+            color: white;
+            border-radius: 8px;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+            animation-fill-mode: forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="logo">
+                <img src="thinksy_logo.png" alt="Thinksy Logo">
+                <h1>Thinksy</h1>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-login">Log In</button>
+                <button class="btn btn-signup">Sign Up</button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Left Section (Hero) -->
+            <div class="hero-section">
+                <h1 class="hero-title">Collaborative learning made easy</h1>
+                <p class="hero-text">
+                    Connect with fellow developers and designers to learn, level up your skills, and earn badges.
+                    Join collaborative coding sessions, exchange knowledge, and climb the leaderboard.
+                </p>
+                <button class="btn btn-get-started">Get Started</button>
+            </div>
+
+            <!-- Right Section (Collaboration Form) -->
+            <div class="collaboration-section">
+                <div class="collab-card">
+                    <h2>Start a Collaboration</h2>
+                    <div class="collab-form">
+                        <textarea placeholder="Frontend dev, needs help with UX for a UI clone"></textarea>
+                        <div class="skill-section">
+                            <label for="skill-select">Your Skill</label>
+                            <div class="custom-select">
+                                <div class="select-selected" id="selected-skill">Frontend</div>
+                                <div class="select-dropdown hidden" id="skill-dropdown">
+                                    <div class="option" data-value="frontend">Frontend</div>
+                                    <div class="option" data-value="backend">Backend</div>
+                                    <div class="option" data-value="ui">UI Design</div>
+                                    <div class="option" data-value="ux">UX Research</div>
+                                    <div class="option" data-value="devops">DevOps</div>
+                                    <div class="option" data-value="mobile">Mobile Development</div>
+                                    <div class="option" data-value="data">Data Science</div>
+                                    <div class="option" data-value="others">Others</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-challenge">Post Challenge</button>
+                    </div>
+                </div>
+
+                <div class="skill-chart-card">
+                    <h3>SkillDNA</h3>
+                    <div class="radar-chart">
+                        <canvas id="skillRadar"></canvas>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-info">
+                        <div class="profile-avatar">
+                            <img src="unknown_user copy.png" alt="Profile Avatar">
+                        </div>
+                        <h3 class="profile-name">Alex Johnson</h3>
+                    </div>
+                    <div class="badges-container">
+                        <div class="badge">
+                            <div class="badge-icon mentor">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <span class="badge-label">Mentor</span>
+                        </div>
+                        <div class="badge">
+                            <div class="badge-icon collaborator">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="badge-label">Collaborator</span>
+                        </div>
+                        <div class="badge">
+                            <div class="badge-icon learner">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <span class="badge-label">Learner</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeLogin">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="text" id="loginUsername" placeholder="Username" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="submit" class="btn-submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeSignup">&times;</span>
+            <h2>Sign Up</h2>
+            <form id="signupForm">
+                <input type="text" id="signupUsername" placeholder="Username" required>
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <input type="email" id="signupEmail" placeholder="Email" required>
+                <button type="submit" class="btn-submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Status Message -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        // Modal handling
+        const loginBtn = document.querySelector(".btn-login");
+        const signupBtn = document.querySelector(".btn-signup");
+        const getStartedBtn = document.querySelector(".btn-get-started");
+        const loginModal = document.getElementById("loginModal");
+        const signupModal = document.getElementById("signupModal");
+        const closeLogin = document.getElementById("closeLogin");
+        const closeSignup = document.getElementById("closeSignup");
+        const statusMessage = document.getElementById("statusMessage");
+        
+        loginBtn.onclick = () => loginModal.style.display = "block";
+        signupBtn.onclick = () => signupModal.style.display = "block";
+        getStartedBtn.onclick = () => signupModal.style.display = "block";
+
+        closeLogin.onclick = () => loginModal.style.display = "none";
+        closeSignup.onclick = () => signupModal.style.display = "none";
+
+        window.onclick = function(event) {
+            if (event.target == loginModal) loginModal.style.display = "none";
+            if (event.target == signupModal) signupModal.style.display = "none";
+        }
+        
+        // Custom select dropdown functionality
+        const selectedSkill = document.getElementById("selected-skill");
+        const skillDropdown = document.getElementById("skill-dropdown");
+        const options = document.querySelectorAll(".option");
+        
+        selectedSkill.addEventListener("click", function() {
+            skillDropdown.classList.toggle("hidden");
+        });
+        
+        options.forEach(option => {
+            option.addEventListener("click", function() {
+                selectedSkill.textContent = this.textContent;
+                skillDropdown.classList.add("hidden");
+            });
+        });
+        
+        // Form submission handling
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById("loginUsername").value;
+            const password = document.getElementById("loginPassword").value;
+            
+            // Normally this would be an API call to your backend
+            console.log("Login attempt:", { username, password });
+            
+            // Close modal
+            loginModal.style.display = "none";
+            
+            // Show success message
+            showStatusMessage("Login successful! Welcome back, " + username);
+            
+            // You would typically redirect or update UI based on successful login
+        });
+        
+        document.getElementById("signupForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById("signupUsername").value;
+            const password = document.getElementById("signupPassword").value;
+            const email = document.getElementById("signupEmail").value;
+            
+            // Normally this would be an API call to your backend
+            console.log("Signup attempt:", { username, password, email });
+            
+            // Close modal
+            signupModal.style.display = "none";
+            
+            // Show success message
+            showStatusMessage("Account created successfully! Welcome to Thinksy, " + username);
+            
+            // You would typically redirect or update UI based on successful signup
+        });
+        
+        // Status message function
+        function showStatusMessage(message) {
+            statusMessage.textContent = message;
+            statusMessage.style.display = "block";
+            
+            // Remove message after animation completes
+            setTimeout(() => {
+                statusMessage.style.display = "none";
+            }, 3000);
+        }
+        
+        // Initialize skill radar chart
+        const ctx = document.getElementById('skillRadar').getContext('2d');
+        const skillChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Frontend', 'Backend', 'UI Design', 'UX', 'DevOps', 'Data Science'],
+                datasets: [{
+                    label: 'Your Skills',
+                    data: [85, 65, 75, 60, 45, 50],
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        pointLabels: {
+                            font: {
+                                size: 12
+                            }
+                        },
+                        ticks: {
+                            display: false,
+                            stepSize: 20
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
